@@ -1,87 +1,120 @@
 import React from "react";
-import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
-import { CricketScorecard } from './components/Cricket/CricketAdmin';
-import { TableTennisScorecard } from './components/TableTennis/TableTennisScorecard';
-import { FootballScorecard } from './components/Football/FootballScorecard';
-import { BasketballScorecard } from './components/Basketball/BasketballScorecard';
-import { TennisScorecard } from './components/Tennis/TennisScorecard';
+import { useNavigate } from "react-router-dom";
+
 import { Trophy } from 'lucide-react';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "./components/ui/select";
+import { Card, CardContent } from "./components/ui/card";
+import { Badge } from "./components/ui/badge";
 
-export default function AdminPage() {
-  const [sport, setSport] = useState("cricket");
+type Sport = "cricket" | "tabletennis" | "football" | "basketball" | "tennis";
 
-  return (
-    <div className="overflow-x-hidden min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
-      <div className="w-full max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex flex-wrap justify-center gap-2 mb-6">
-            <Trophy className="h-10 w-10 text-blue-600" />
-            <h1 className="text-4xl">Sports Scorecard</h1>
+type Match = {
+  id: string;
+  sport: Sport;
+  teamA: string;
+  teamB: string;
+  status: "upcoming" | "live" | "finished";
+};
+/*
+Cricket=CK
+Football=FB
+Basketball=BB
+Tennis=TN
+TableTennis=TT
+*/
+//useEffect(() => fetch("/api/matches")) later
+const MATCHES: Match[] = [
+    {
+      id: "CK-1",
+      sport: "cricket",
+      teamA: "India",
+      teamB: "Australia",
+      status: "live",
+    },
+    {
+      id: "FB-1",
+      sport: "football",
+      teamA: "Real Madrid",
+      teamB: "Barcelona",
+      status: "upcoming",
+    },
+    {
+      id: "BB-1",
+      sport: "basketball",
+      teamA: "Lakers",
+      teamB: "Warriors",
+      status: "finished",
+    },
+    {
+      id: "TN-1",
+      sport: "tennis",
+      teamA: "Djokovic",
+      teamB: "Alcaraz",
+      status: "live",
+    },
+    {
+      id: "TT-1",
+      sport: "tabletennis",
+      teamA: "Team A",
+      teamB: "Team B",
+      status: "upcoming",
+    },
+  ];
+  
+  export default function AdminPage() {
+
+    const navigate = useNavigate();
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
+        <div className="max-w-5xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="text-center">
+            <div className="flex justify-center items-center gap-3 mb-2">
+              <Trophy className="h-8 w-8 text-blue-600" />
+              <h1 className="text-3xl font-bold">Admin – Matches</h1>
+            </div>
+            <p className="text-muted-foreground">
+              Select a match to manage scores
+            </p>
           </div>
-          <p className="text-muted-foreground">
-            Track scores for Cricket, Table Tennis, Football, Basketball, and Tennis
-          </p>
+  
+          {/* Match list */}
+          <div className="space-y-4">
+            {MATCHES.map((match) => (
+              <Card
+                key={match.id}
+                className="cursor-pointer hover:shadow-md transition"
+                onClick={() => {
+                  // later → navigate(`/admin/match/${match.id}`)
+                  navigate(`/admin/match/${match.id}`)
+                }}
+              >
+                <CardContent className="flex items-center justify-between p-4">
+                  <div>
+                    <div className="font-semibold">
+                      {match.teamA} vs {match.teamB}
+                    </div>
+                    <div className="text-sm text-muted-foreground capitalize">
+                      {match.sport}
+                    </div>
+                  </div>
+  
+                  <Badge
+                    variant={
+                      match.status === "live"
+                        ? "destructive"
+                        : match.status === "upcoming"
+                        ? "secondary"
+                        : "outline"
+                    }
+                  >
+                    {match.status}
+                  </Badge>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
-
-        {/* Mobile selector (pill style) */}
-        <div className="block md:hidden mb-6">
-          <Select value={sport} onValueChange={setSport}>
-            <SelectTrigger
-              className="
-                w-full
-                rounded-full
-                bg-white/70
-                backdrop-blur
-                border-0
-                shadow-sm
-                px-5
-                py-3
-                text-sm
-                font-medium
-                justify-center
-              "
-            >
-              <SelectValue placeholder="Select Sport" />
-            </SelectTrigger>
-
-            <SelectContent className="rounded-xl">
-              <SelectItem value="cricket">Cricket</SelectItem>
-              <SelectItem value="tabletennis">Table Tennis</SelectItem>
-              <SelectItem value="football">Football</SelectItem>
-              <SelectItem value="basketball">Basketball</SelectItem>
-              <SelectItem value="tennis">Tennis</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Desktop tabs (hidden on mobile) */}
-        <div className="hidden md:block mb-6">
-          <Tabs value={sport} onValueChange={setSport}>
-            <TabsList className="grid grid-cols-5">
-              <TabsTrigger value="cricket">Cricket</TabsTrigger>
-              <TabsTrigger value="tabletennis">Table Tennis</TabsTrigger>
-              <TabsTrigger value="football">Football</TabsTrigger>
-              <TabsTrigger value="basketball">Basketball</TabsTrigger>
-              <TabsTrigger value="tennis">Tennis</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-
-        {sport === "cricket" && <CricketScorecard />}
-        {sport === "tabletennis" && <TableTennisScorecard />}
-        {sport === "football" && <FootballScorecard />}
-        {sport === "basketball" && <BasketballScorecard />}
-        {sport === "tennis" && <TennisScorecard />}
       </div>
-    </div>
-  );
-}
+    );
+  }
