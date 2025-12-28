@@ -61,11 +61,12 @@ app.get("/alive", (req, res) => {
     res.json({ status: "alive" });
 });
 
+// CORS middleware
+app.use(cors());
+
 // Security middleware
 app.use(helmet());
 
-// CORS middleware
-app.use(cors());
 
 // Body parser middleware
 app.use(express.json());

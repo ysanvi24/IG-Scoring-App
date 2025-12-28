@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import PublicPage from "./publicPage";
+import PublicPage from "./PublicPage";
 import AdminPage from "./AdminPage";
 import LoginPage from "./LoginPage";
 import MatchAdminPage from "./MatchAdminPage";

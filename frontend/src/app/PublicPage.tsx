@@ -6,6 +6,8 @@ import { Badge } from "./components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
+//NO score displayed here, design choice
+
 type Sport = "cricket" | "tabletennis" | "football" | "basketball" | "tennis";
 
 type Match = {
@@ -158,17 +160,6 @@ export default function PublicPage() {
                           {match.sport}
                         </div>
                       </div>
-                      {match.score1 !== undefined && match.score2 !== undefined && (
-                        <div className="flex items-center gap-2 text-lg font-bold">
-                          <span className={match.score1 > match.score2 ? "text-green-600" : ""}>
-                            {match.score1}
-                          </span>
-                          <span className="text-muted-foreground">-</span>
-                          <span className={match.score2 > match.score1 ? "text-green-600" : ""}>
-                            {match.score2}
-                          </span>
-                        </div>
-                      )}
                     </div>
     
                     <Badge

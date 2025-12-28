@@ -122,19 +122,15 @@ export function FootballScorecard() {
   };
 
   useEffect(() => {
-    if (match.time <= 0) return;
-  
     const interval = setInterval(() => {
       setMatch((m) => {
-        if (m.time <= 1) {
-          return { ...m, time: 0 };
-        }
+        if (m.time <= 0) return m;
         return { ...m, time: m.time - 1 };
       });
     }, 1000);
   
     return () => clearInterval(interval);
-  }, [match.time]);
+  }, []);
 
   return (
     <div className="space-y-6">
